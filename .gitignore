@@ -1,0 +1,6 @@
+/media
+/venv
+/env
+.idea
+*.session
+*.session-journal

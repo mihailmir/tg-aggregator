@@ -1,0 +1,13 @@
+{
+  "telegramApiId": 1234,
+  "telegramApiHash": "1234",
+  "botToken": "1234",
+  "channels": {
+    "-1234": "",
+    "-1235": "",
+    "-1236": "",
+    "-1237": "",
+    "-1238": ""
+  },
+  "defaultDestinationChannel": "-1239"
+}
