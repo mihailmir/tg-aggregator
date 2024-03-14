@@ -20,23 +20,20 @@ async def message_listener(event):
     logging.info(event.message.to_dict())
 
     media_data = None
+    reply_to = None
     message = event.message
-    message_id = message.id
     message_text = message.message
     channel_id = int(f"-100{message.peer_id.channel_id}")
-    destination_channel = config.channels.get(str(channel_id)) or config.defaultDestinationChannel
-
-    channel_data = await client.get_entity(channel_id)
-
-    channel_name = channel_data.title
-    url = 'https://t.me/c/' + str(channel_id) + '/' + str(message_id)
-    formatted_link = f"**[{channel_name}]({url})**"
-    headline = message_text + '\n\n' + formatted_link
-
+    destination_channel = int(config.channels.get(str(channel_id)) or config.defaultDestinationChannel)
     if message.media:
         media_data = await client.download_media(message.media, f'./media/file{get_extension(message.media)}')
+    if message.reply_to and message.reply_to.reply_to_msg_id:
+        original_parent_message = await client.get_messages(channel_id, ids=message.reply_to.reply_to_msg_id)
+        parent_messages = await client.get_messages(destination_channel, search=original_parent_message.message, limit=1)
+        if parent_messages:
+            reply_to = parent_messages[0].id
 
-    await bot.send_message(int(destination_channel), headline, link_preview=False, file=media_data)
+    await bot.send_message(destination_channel, message_text, link_preview=False, file=media_data, reply_to=reply_to)
 
 with client:
     client.run_until_disconnected()
