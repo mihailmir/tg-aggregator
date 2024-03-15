@@ -22,6 +22,7 @@ async def message_listener(event):
     media_data = None
     reply_to = None
     message = event.message
+    message_text = message.message
     channel_id = int(f"-100{message.peer_id.channel_id}")
     destination_channel = int(config.channels.get(str(channel_id)) or config.defaultDestinationChannel)
     if message.media:
@@ -32,7 +33,7 @@ async def message_listener(event):
         if parent_messages:
             reply_to = parent_messages[0].id
 
-    await bot.send_message(destination_channel, message, link_preview=False, file=media_data, reply_to=reply_to, )
+    await bot.send_message(destination_channel, message_text, link_preview=False, file=media_data, reply_to=reply_to)
 
 with client:
     client.run_until_disconnected()
